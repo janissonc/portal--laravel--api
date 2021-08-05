@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Period_operation;
 use Illuminate\Http\Request;
 
 class PeriodOperationController extends Controller
@@ -13,7 +14,7 @@ class PeriodOperationController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Period_operation::get());
     }
 
     /**
@@ -34,7 +35,14 @@ class PeriodOperationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $period_operation = new Period_operation();
+        $period_operation->evento_id = $request->input('evento_id');
+        $period_operation->start = $request->input('start');
+        $period_operation->end = $request->input('end');
+        $period_operation->active = 1;
+        $period_operation->is_deleted = 0;
+        $period_operation->save();
+        return response()->json($period_operation);
     }
 
     /**
@@ -68,7 +76,14 @@ class PeriodOperationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $period_operation = Period_operation::find($id);
+        $period_operation->evento_id = $request->input('evento_id');
+        $period_operation->start = $request->input('start');
+        $period_operation->end = $request->input('end');
+        $period_operation->active = $request->input('active');
+        $period_operation->is_deleted = 0;
+        $period_operation->save();
+        return response()->json($period_operation);
     }
 
     /**
@@ -79,6 +94,10 @@ class PeriodOperationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $period_operation = Period_operation::find($id);
+        $period_operation->active = 0;
+        $period_operation->is_deleted = 1;
+        $period_operation->save();
+        return response()->json($period_operation);
     }
 }

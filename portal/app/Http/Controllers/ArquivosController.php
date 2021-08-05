@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Arquivos;
 use Illuminate\Http\Request;
 
 class ArquivosController extends Controller
@@ -13,7 +14,7 @@ class ArquivosController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Arquivos::get());
     }
 
     /**
@@ -34,7 +35,14 @@ class ArquivosController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $arquivos = new Arquivos;
+        $arquivos->nome = $request->input('nome');
+        $arquivos->path = $request->input('path');
+        $arquivos->description = $request->input('description');
+        $arquivos->active = 1;
+        $arquivos->is_deleted = 0;
+        $arquivos->save();
+        return response()->json($arquivos);
     }
 
     /**
@@ -45,7 +53,7 @@ class ArquivosController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Arquivos::find($id));
     }
 
     /**
@@ -68,7 +76,14 @@ class ArquivosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $arquivos = Arquivos::find($id);
+        $arquivos->nome = $request->input('nome');
+        $arquivos->path = $request->input('path');
+        $arquivos->description = $request->input('description');
+        $arquivos->active = $request->input('active');
+        $arquivos->is_deleted = 0;
+        $arquivos->save();
+        return response()->json($arquivos);
     }
 
     /**
@@ -79,6 +94,10 @@ class ArquivosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $arquivos = Arquivos::find($id);
+        $arquivos->active = 0;
+        $arquivos->is_deleted = 1;
+        $arquivos->save();
+        return response()->json($arquivos);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Situacao;
 use Illuminate\Http\Request;
 
 class SituacaoController extends Controller
@@ -13,7 +14,7 @@ class SituacaoController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Situacao::get());
     }
 
     /**
@@ -34,7 +35,13 @@ class SituacaoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $situacao = new Situacao;
+        $situacao->nome = $request->input('nome');
+        $situacao->description = $request->input('description');
+        $situacao->active = 1;
+        $situacao->is_deleted = 0;
+        $situacao->save();
+        return response()->json($situacao);
     }
 
     /**
@@ -45,7 +52,7 @@ class SituacaoController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Situacao::find($id));
     }
 
     /**
@@ -68,7 +75,13 @@ class SituacaoController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $situacao = Situacao::find($id);
+        $situacao->nome = $request->input('nome');
+        $situacao->description = $request->input('description');
+        $situacao->active = $request->input('active');
+        $situacao->is_deleted = 0;
+        $situacao->save();
+        return response()->json($situacao);
     }
 
     /**
@@ -79,6 +92,10 @@ class SituacaoController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $situacao = Situacao::find($id);
+        $situacao->active = 0;
+        $situacao->is_deleted = 1;
+        $situacao->save();
+        return response()->json($situacao);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Disciplina;
 use Illuminate\Http\Request;
 
 class DisciplinaController extends Controller
@@ -13,7 +14,7 @@ class DisciplinaController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(Disciplina::get());
     }
 
     /**
@@ -34,7 +35,14 @@ class DisciplinaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $disciplina = new Disciplina;
+        $disciplina->evento_id = $request->input('evento_id');
+        $disciplina->nome = $request->input('nome');
+        $disciplina->description = $request->input('description');
+        $disciplina->active = 1;
+        $disciplina->is_deleted = 0;
+        $disciplina->save();
+        return response()->json($disciplina);
     }
 
     /**
@@ -45,7 +53,7 @@ class DisciplinaController extends Controller
      */
     public function show($id)
     {
-        //
+        return response()->json(Disciplina::find($id));
     }
 
     /**
@@ -68,7 +76,14 @@ class DisciplinaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $disciplina = Disciplina::find($id);
+        $disciplina->evento_id = $request->input('evento_id');
+        $disciplina->nome = $request->input('nome');
+        $disciplina->description = $request->input('description');
+        $disciplina->active = $request->input('active');
+        $disciplina->is_deleted = 0;
+        $disciplina->save();
+        return response()->json($disciplina);
     }
 
     /**
@@ -79,6 +94,10 @@ class DisciplinaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $disciplina = Disciplina::find($id);
+        $disciplina->active = 0;
+        $disciplina->is_deleted = 1;
+        $disciplina->save();
+        return response()->json($disciplina);
     }
 }
